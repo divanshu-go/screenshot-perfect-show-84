@@ -27,6 +27,7 @@ export function useWorkspace() {
 }
 
 export const WS_STORAGE_KEY = "canarygrid.workspace";
+export const PENDING_INVITE_KEY = "canarygrid.pendingInvite";
 
 // UI hints only. Authorization is enforced by database policies.
 export function permissions(role: WorkspaceRole) {

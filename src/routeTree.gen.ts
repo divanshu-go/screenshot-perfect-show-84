@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_app'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedAppArchetypesRouteImport } from './routes/_authenticated/_app/archetypes'
@@ -24,6 +25,7 @@ import { Route as AuthenticatedAppOverviewRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAppReleasesRouteImport } from './routes/_authenticated/_app/releases'
 import { Route as AuthenticatedAppRunsRouteImport } from './routes/_authenticated/_app/runs'
 import { Route as AuthenticatedAppSettingsRouteImport } from './routes/_authenticated/_app/settings'
+import { Route as AuthenticatedAppReleasesReleaseIdRouteImport } from './routes/_authenticated/_app/releases.$releaseId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +39,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
@@ -106,10 +113,17 @@ const AuthenticatedAppSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppReleasesReleaseIdRoute =
+  AuthenticatedAppReleasesReleaseIdRouteImport.update({
+    id: '/$releaseId',
+    path: '/$releaseId',
+    getParentRoute: () => AuthenticatedAppReleasesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/invite': typeof InviteRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/archetypes': typeof AuthenticatedAppArchetypesRoute
   '/audit': typeof AuthenticatedAppAuditRoute
@@ -118,13 +132,15 @@ export interface FileRoutesByFullPath {
   '/credentials': typeof AuthenticatedAppCredentialsRoute
   '/journeys': typeof AuthenticatedAppJourneysRoute
   '/overview': typeof AuthenticatedAppOverviewRoute
-  '/releases': typeof AuthenticatedAppReleasesRoute
+  '/releases': typeof AuthenticatedAppReleasesRouteWithChildren
   '/runs': typeof AuthenticatedAppRunsRoute
   '/settings': typeof AuthenticatedAppSettingsRoute
+  '/releases/$releaseId': typeof AuthenticatedAppReleasesReleaseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/invite': typeof InviteRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/archetypes': typeof AuthenticatedAppArchetypesRoute
   '/audit': typeof AuthenticatedAppAuditRoute
@@ -133,15 +149,17 @@ export interface FileRoutesByTo {
   '/credentials': typeof AuthenticatedAppCredentialsRoute
   '/journeys': typeof AuthenticatedAppJourneysRoute
   '/overview': typeof AuthenticatedAppOverviewRoute
-  '/releases': typeof AuthenticatedAppReleasesRoute
+  '/releases': typeof AuthenticatedAppReleasesRouteWithChildren
   '/runs': typeof AuthenticatedAppRunsRoute
   '/settings': typeof AuthenticatedAppSettingsRoute
+  '/releases/$releaseId': typeof AuthenticatedAppReleasesReleaseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/invite': typeof InviteRoute
   '/_authenticated/_app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/_app/archetypes': typeof AuthenticatedAppArchetypesRoute
@@ -151,15 +169,17 @@ export interface FileRoutesById {
   '/_authenticated/_app/credentials': typeof AuthenticatedAppCredentialsRoute
   '/_authenticated/_app/journeys': typeof AuthenticatedAppJourneysRoute
   '/_authenticated/_app/overview': typeof AuthenticatedAppOverviewRoute
-  '/_authenticated/_app/releases': typeof AuthenticatedAppReleasesRoute
+  '/_authenticated/_app/releases': typeof AuthenticatedAppReleasesRouteWithChildren
   '/_authenticated/_app/runs': typeof AuthenticatedAppRunsRoute
   '/_authenticated/_app/settings': typeof AuthenticatedAppSettingsRoute
+  '/_authenticated/_app/releases/$releaseId': typeof AuthenticatedAppReleasesReleaseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/invite'
     | '/onboarding'
     | '/archetypes'
     | '/audit'
@@ -171,10 +191,12 @@ export interface FileRouteTypes {
     | '/releases'
     | '/runs'
     | '/settings'
+    | '/releases/$releaseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/invite'
     | '/onboarding'
     | '/archetypes'
     | '/audit'
@@ -186,11 +208,13 @@ export interface FileRouteTypes {
     | '/releases'
     | '/runs'
     | '/settings'
+    | '/releases/$releaseId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/invite'
     | '/_authenticated/_app'
     | '/_authenticated/onboarding'
     | '/_authenticated/_app/archetypes'
@@ -203,12 +227,14 @@ export interface FileRouteTypes {
     | '/_authenticated/_app/releases'
     | '/_authenticated/_app/runs'
     | '/_authenticated/_app/settings'
+    | '/_authenticated/_app/releases/$releaseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  InviteRoute: typeof InviteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/_app': {
@@ -318,8 +351,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppSettingsRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/releases/$releaseId': {
+      id: '/_authenticated/_app/releases/$releaseId'
+      path: '/$releaseId'
+      fullPath: '/releases/$releaseId'
+      preLoaderRoute: typeof AuthenticatedAppReleasesReleaseIdRouteImport
+      parentRoute: typeof AuthenticatedAppReleasesRoute
+    }
   }
 }
+
+interface AuthenticatedAppReleasesRouteChildren {
+  AuthenticatedAppReleasesReleaseIdRoute: typeof AuthenticatedAppReleasesReleaseIdRoute
+}
+
+const AuthenticatedAppReleasesRouteChildren: AuthenticatedAppReleasesRouteChildren =
+  {
+    AuthenticatedAppReleasesReleaseIdRoute:
+      AuthenticatedAppReleasesReleaseIdRoute,
+  }
+
+const AuthenticatedAppReleasesRouteWithChildren =
+  AuthenticatedAppReleasesRoute._addFileChildren(
+    AuthenticatedAppReleasesRouteChildren,
+  )
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppArchetypesRoute: typeof AuthenticatedAppArchetypesRoute
@@ -329,7 +384,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppCredentialsRoute: typeof AuthenticatedAppCredentialsRoute
   AuthenticatedAppJourneysRoute: typeof AuthenticatedAppJourneysRoute
   AuthenticatedAppOverviewRoute: typeof AuthenticatedAppOverviewRoute
-  AuthenticatedAppReleasesRoute: typeof AuthenticatedAppReleasesRoute
+  AuthenticatedAppReleasesRoute: typeof AuthenticatedAppReleasesRouteWithChildren
   AuthenticatedAppRunsRoute: typeof AuthenticatedAppRunsRoute
   AuthenticatedAppSettingsRoute: typeof AuthenticatedAppSettingsRoute
 }
@@ -342,7 +397,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppCredentialsRoute: AuthenticatedAppCredentialsRoute,
   AuthenticatedAppJourneysRoute: AuthenticatedAppJourneysRoute,
   AuthenticatedAppOverviewRoute: AuthenticatedAppOverviewRoute,
-  AuthenticatedAppReleasesRoute: AuthenticatedAppReleasesRoute,
+  AuthenticatedAppReleasesRoute: AuthenticatedAppReleasesRouteWithChildren,
   AuthenticatedAppRunsRoute: AuthenticatedAppRunsRoute,
   AuthenticatedAppSettingsRoute: AuthenticatedAppSettingsRoute,
 }
@@ -367,6 +422,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  InviteRoute: InviteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

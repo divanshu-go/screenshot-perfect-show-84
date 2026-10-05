@@ -1,23 +1,43 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: ReactNode }) {
+export function PageHeader({
+  title,
+  description,
+  actions,
+}: {
+  title: string;
+  description?: string;
+  actions?: ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-3 border-b pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
-        {description && <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{description}</p>}
+        <h1 className="text-xl font-semibold tracking-[-0.02em]">{title}</h1>
+        {description && (
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{description}</p>
+        )}
       </div>
       {actions && <div className="flex shrink-0 gap-2">{actions}</div>}
     </div>
   );
 }
 
-export function EmptyState({ icon, title, body, action }: { icon?: ReactNode; title: string; body: string; action?: ReactNode }) {
+export function EmptyState({
+  icon,
+  title,
+  body,
+  action,
+}: {
+  icon?: ReactNode;
+  title: string;
+  body: string;
+  action?: ReactNode;
+}) {
   return (
-    <div className="flex flex-col items-center rounded-md border border-dashed px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-lg border border-dashed bg-card px-6 py-14 text-center">
       {icon && <div className="mb-3 text-muted-foreground">{icon}</div>}
       <h3 className="text-sm font-medium">{title}</h3>
       <p className="mt-1 max-w-md text-sm text-muted-foreground">{body}</p>
@@ -28,8 +48,10 @@ export function EmptyState({ icon, title, body, action }: { icon?: ReactNode; ti
 
 export function Loading({ label = "Loading" }: { label?: string }) {
   return (
-    <div className="flex items-center gap-2 py-10 text-sm text-muted-foreground" role="status">
-      <Loader2 className="h-4 w-4 animate-spin" /> {label}…
+    <div className="space-y-3 py-8" role="status" aria-label={label}>
+      <span className="block h-4 w-36 animate-pulse rounded bg-muted" />
+      <span className="block h-20 w-full max-w-2xl animate-pulse rounded-lg bg-muted/70" />
+      <span className="sr-only">{label}</span>
     </div>
   );
 }
@@ -41,7 +63,11 @@ export function ErrorBox({ message, onRetry }: { message: string; onRetry?: () =
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
         <span>{message}</span>
       </div>
-      {onRetry && <Button size="sm" variant="outline" onClick={onRetry}>Retry</Button>}
+      {onRetry && (
+        <Button size="sm" variant="outline" onClick={onRetry}>
+          Retry
+        </Button>
+      )}
     </div>
   );
 }
@@ -52,7 +78,7 @@ const tone: Record<string, string> = {
   healthy: "bg-success/12 text-success border-success/30",
   failed: "bg-destructive/10 text-destructive border-destructive/30",
   error: "bg-destructive/10 text-destructive border-destructive/30",
-  blocked: "bg-destructive/10 text-destructive border-destructive/30",
+  blocked: "bg-warning/12 text-warning-foreground border-warning/35",
   critical: "bg-destructive/10 text-destructive border-destructive/30",
   open: "bg-destructive/10 text-destructive border-destructive/30",
   waived: "bg-warning/15 text-warning-foreground border-warning/40 dark:text-warning",
@@ -67,7 +93,14 @@ const tone: Record<string, string> = {
 
 export function StatusBadge({ status, className }: { status: string; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center rounded border px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wide", tone[status] ?? "bg-muted text-muted-foreground border-border", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium capitalize",
+        tone[status] ?? "bg-muted text-muted-foreground border-border",
+        className,
+      )}
+    >
+      <span className="size-1.5 rounded-full bg-current opacity-70" aria-hidden="true" />
       {status}
     </span>
   );

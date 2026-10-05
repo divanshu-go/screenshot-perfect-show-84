@@ -2,10 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandLogo } from "@/components/app/brand-logo";
+import { PENDING_INVITE_KEY } from "@/lib/workspace";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 const emailSchema = z.string().trim().email("Enter a valid work email").max(255);
+const localSupabase = /127\.0\.0\.1|localhost/.test(import.meta.env["VITE_SUPABASE_URL"] ?? "");
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -28,13 +30,22 @@ function AuthPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const continueAfterAuth = () => {
+      const pendingInvite = localStorage.getItem(PENDING_INVITE_KEY);
+      if (pendingInvite) {
+        navigate({ to: "/invite", search: { token: pendingInvite }, replace: true });
+      } else {
+        navigate({ to: "/overview", replace: true });
+      }
+    };
     const hash = typeof window !== "undefined" ? window.location.hash : "";
-    if (hash.includes("error_code=otp_expired")) setError("That sign-in link has expired. Request a new one below.");
+    if (hash.includes("error_code=otp_expired"))
+      setError("That sign-in link has expired. Request a new one below.");
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/overview", replace: true });
+      if (data.user) continueAfterAuth();
     });
     const { data } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate({ to: "/overview", replace: true });
+      if (session) continueAfterAuth();
     });
     return () => data.subscription.unsubscribe();
   }, [navigate]);
@@ -51,48 +62,72 @@ function AuthPage() {
     });
     if (error) {
       setState("idle");
-      setError(/rate/i.test(error.message) ? "Too many requests. Wait a minute and try again." : error.message);
+      setError(
+        /rate/i.test(error.message)
+          ? "Too many requests. Wait a minute and try again."
+          : error.message,
+      );
     } else setState("sent");
-  }
-
-  async function google() {
-    setError(null);
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/auth` });
-    if (r.error) setError("Google sign-in didn't complete. Try again.");
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <span className="flex items-center gap-2 font-semibold">
-          <span className="grid h-6 w-6 place-items-center rounded bg-primary font-mono text-xs text-primary-foreground">cg</span>
-          CanaryGrid
-        </span>
+        <BrandLogo />
         <h1 className="mt-8 text-xl font-semibold">Sign in</h1>
-        <p className="mt-1 text-sm text-muted-foreground">We'll email you a one-time sign-in link.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          We'll email you a one-time sign-in link.
+        </p>
 
         {state === "sent" ? (
           <div className="mt-6 rounded-md border bg-card p-4 text-sm">
-            Check <span className="font-medium">{email}</span> for a sign-in link. It expires in one hour.
-            <Button variant="link" className="h-auto p-0 pl-1" onClick={() => setState("idle")}>Use another email</Button>
+            {localSupabase ? (
+              <>
+                The sign-in link for <span className="font-medium">{email}</span> is in the local
+                mail viewer. Open it there, then return here. Your account and session are stored
+                only after that link opens in this browser.
+                <a
+                  className="mt-3 block font-medium text-primary hover:underline"
+                  href="http://127.0.0.1:54324"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open local mail
+                </a>
+              </>
+            ) : (
+              <>
+                Check <span className="font-medium">{email}</span> for a sign-in link. It expires
+                in one hour.
+              </>
+            )}
+            <Button variant="link" className="mt-2 h-auto p-0" onClick={() => setState("idle")}>
+              Use another email
+            </Button>
           </div>
         ) : (
           <form onSubmit={sendLink} className="mt-6 space-y-3">
             <div className="space-y-1.5">
               <Label htmlFor="email">Work email</Label>
-              <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" />
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@company.com"
+              />
             </div>
             <Button type="submit" className="w-full" disabled={state === "sending"}>
               {state === "sending" ? "Sending…" : "Email me a link"}
             </Button>
           </form>
         )}
-        {error && <p className="mt-3 text-sm text-destructive" role="alert">{error}</p>}
-
-        <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-          <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-        </div>
-        <Button variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
+        {error && (
+          <p className="mt-3 text-sm text-destructive" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

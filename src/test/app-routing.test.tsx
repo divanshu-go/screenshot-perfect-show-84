@@ -14,4 +14,21 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it.each([
+    "/overview",
+    "/releases",
+    "/releases/release-pr1842-attempt-1",
+    "/coverage",
+    "/journeys",
+    "/runs",
+    "/clusters",
+    "/credentials",
+    "/audit",
+    "/settings",
+  ])("matches the CanaryGrid page at %s", (path) => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const matches = router.matchRoutes(path);
+    expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+  });
 });
