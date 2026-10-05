@@ -1,24 +1,25 @@
-# Pixel Perfect Pixel
+# CanaryGrid
 
-Implement exactly the screenshot and nothing else
+Tenant compatibility release gate for multi-tenant SaaS.
 
-This project was built with [Lovable](https://lovable.dev).
+CanaryGrid runs API journeys against representative tenant configurations and records pass, fail, and waiver evidence before a release ships.
 
-## Build with Lovable
+## Local development
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/8f0d029a-0f92-46c0-8664-50b273a9c4a9).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requirements: Bun, Docker, and the Supabase CLI.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install
+cp .env.example .env
+bun run db:start
+bun run db:status
+bun run dev
 ```
+
+Copy the local API URL and publishable key from `bun run db:status` into `.env`. Sign-in uses a magic link. On this machine the message stays in the local mail viewer at http://127.0.0.1:54324.
+
+## Database
+
+Schema changes live in `supabase/migrations`. Reset the local database with `bun run db:reset`. Generate TypeScript types with `bun run db:types`.
+
+Hosted Supabase and the GitHub App are documented in `MANUAL_SETUP.md`.
