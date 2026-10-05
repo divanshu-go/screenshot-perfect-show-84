@@ -89,7 +89,7 @@ function Archetypes() {
       }
     },
     onSuccess: () => { toast.success("Archetype saved"); setForm(null); qc.invalidateQueries({ queryKey: ["archetypes", workspace.id] }); qc.invalidateQueries({ queryKey: ["overview"] }); },
-    onError: (e) => toast.error(e instanceof z.ZodError ? e.issues[0].message : friendlyError(e)),
+    onError: (e) => toast.error(e instanceof z.ZodError ? e.issues[0]?.message ?? "Invalid input" : friendlyError(e)),
   });
 
   const del = useMutation({

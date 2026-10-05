@@ -43,7 +43,7 @@ function AuthPage() {
     e.preventDefault();
     setError(null);
     const parsed = emailSchema.safeParse(email);
-    if (!parsed.success) return setError(parsed.error.issues[0].message);
+    if (!parsed.success) return setError(parsed.error.issues[0]?.message ?? "Invalid input");
     setState("sending");
     const { error } = await supabase.auth.signInWithOtp({
       email: parsed.data,
