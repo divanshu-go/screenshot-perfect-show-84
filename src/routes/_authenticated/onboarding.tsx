@@ -35,7 +35,7 @@ function Onboarding() {
     e.preventDefault();
     setError(null);
     const parsed = schema.safeParse({ name, slug });
-    if (!parsed.success) return setError(parsed.error.issues[0].message);
+    if (!parsed.success) return setError(parsed.error.issues[0]?.message ?? "Invalid input");
     setBusy(true);
     const { data, error } = await supabase.rpc("create_workspace", { _name: parsed.data.name, _slug: parsed.data.slug });
     setBusy(false);

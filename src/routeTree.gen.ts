@@ -15,7 +15,15 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_app'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedAppArchetypesRouteImport } from './routes/_authenticated/_app/archetypes'
+import { Route as AuthenticatedAppAuditRouteImport } from './routes/_authenticated/_app/audit'
+import { Route as AuthenticatedAppClustersRouteImport } from './routes/_authenticated/_app/clusters'
+import { Route as AuthenticatedAppCoverageRouteImport } from './routes/_authenticated/_app/coverage'
+import { Route as AuthenticatedAppCredentialsRouteImport } from './routes/_authenticated/_app/credentials'
+import { Route as AuthenticatedAppJourneysRouteImport } from './routes/_authenticated/_app/journeys'
 import { Route as AuthenticatedAppOverviewRouteImport } from './routes/_authenticated/_app/overview'
+import { Route as AuthenticatedAppReleasesRouteImport } from './routes/_authenticated/_app/releases'
+import { Route as AuthenticatedAppRunsRouteImport } from './routes/_authenticated/_app/runs'
+import { Route as AuthenticatedAppSettingsRouteImport } from './routes/_authenticated/_app/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,10 +54,56 @@ const AuthenticatedAppArchetypesRoute =
     path: '/archetypes',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppAuditRoute = AuthenticatedAppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppClustersRoute =
+  AuthenticatedAppClustersRouteImport.update({
+    id: '/clusters',
+    path: '/clusters',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCoverageRoute =
+  AuthenticatedAppCoverageRouteImport.update({
+    id: '/coverage',
+    path: '/coverage',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCredentialsRoute =
+  AuthenticatedAppCredentialsRouteImport.update({
+    id: '/credentials',
+    path: '/credentials',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppJourneysRoute =
+  AuthenticatedAppJourneysRouteImport.update({
+    id: '/journeys',
+    path: '/journeys',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppOverviewRoute =
   AuthenticatedAppOverviewRouteImport.update({
     id: '/overview',
     path: '/overview',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppReleasesRoute =
+  AuthenticatedAppReleasesRouteImport.update({
+    id: '/releases',
+    path: '/releases',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppRunsRoute = AuthenticatedAppRunsRouteImport.update({
+  id: '/runs',
+  path: '/runs',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppSettingsRoute =
+  AuthenticatedAppSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
 
@@ -58,14 +112,30 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/archetypes': typeof AuthenticatedAppArchetypesRoute
+  '/audit': typeof AuthenticatedAppAuditRoute
+  '/clusters': typeof AuthenticatedAppClustersRoute
+  '/coverage': typeof AuthenticatedAppCoverageRoute
+  '/credentials': typeof AuthenticatedAppCredentialsRoute
+  '/journeys': typeof AuthenticatedAppJourneysRoute
   '/overview': typeof AuthenticatedAppOverviewRoute
+  '/releases': typeof AuthenticatedAppReleasesRoute
+  '/runs': typeof AuthenticatedAppRunsRoute
+  '/settings': typeof AuthenticatedAppSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/archetypes': typeof AuthenticatedAppArchetypesRoute
+  '/audit': typeof AuthenticatedAppAuditRoute
+  '/clusters': typeof AuthenticatedAppClustersRoute
+  '/coverage': typeof AuthenticatedAppCoverageRoute
+  '/credentials': typeof AuthenticatedAppCredentialsRoute
+  '/journeys': typeof AuthenticatedAppJourneysRoute
   '/overview': typeof AuthenticatedAppOverviewRoute
+  '/releases': typeof AuthenticatedAppReleasesRoute
+  '/runs': typeof AuthenticatedAppRunsRoute
+  '/settings': typeof AuthenticatedAppSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -75,13 +145,47 @@ export interface FileRoutesById {
   '/_authenticated/_app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/_app/archetypes': typeof AuthenticatedAppArchetypesRoute
+  '/_authenticated/_app/audit': typeof AuthenticatedAppAuditRoute
+  '/_authenticated/_app/clusters': typeof AuthenticatedAppClustersRoute
+  '/_authenticated/_app/coverage': typeof AuthenticatedAppCoverageRoute
+  '/_authenticated/_app/credentials': typeof AuthenticatedAppCredentialsRoute
+  '/_authenticated/_app/journeys': typeof AuthenticatedAppJourneysRoute
   '/_authenticated/_app/overview': typeof AuthenticatedAppOverviewRoute
+  '/_authenticated/_app/releases': typeof AuthenticatedAppReleasesRoute
+  '/_authenticated/_app/runs': typeof AuthenticatedAppRunsRoute
+  '/_authenticated/_app/settings': typeof AuthenticatedAppSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/onboarding' | '/archetypes' | '/overview'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/onboarding'
+    | '/archetypes'
+    | '/audit'
+    | '/clusters'
+    | '/coverage'
+    | '/credentials'
+    | '/journeys'
+    | '/overview'
+    | '/releases'
+    | '/runs'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/onboarding' | '/archetypes' | '/overview'
+  to:
+    | '/'
+    | '/auth'
+    | '/onboarding'
+    | '/archetypes'
+    | '/audit'
+    | '/clusters'
+    | '/coverage'
+    | '/credentials'
+    | '/journeys'
+    | '/overview'
+    | '/releases'
+    | '/runs'
+    | '/settings'
   id:
     | '__root__'
     | '/'
@@ -90,7 +194,15 @@ export interface FileRouteTypes {
     | '/_authenticated/_app'
     | '/_authenticated/onboarding'
     | '/_authenticated/_app/archetypes'
+    | '/_authenticated/_app/audit'
+    | '/_authenticated/_app/clusters'
+    | '/_authenticated/_app/coverage'
+    | '/_authenticated/_app/credentials'
+    | '/_authenticated/_app/journeys'
     | '/_authenticated/_app/overview'
+    | '/_authenticated/_app/releases'
+    | '/_authenticated/_app/runs'
+    | '/_authenticated/_app/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -143,6 +255,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppArchetypesRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/audit': {
+      id: '/_authenticated/_app/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuthenticatedAppAuditRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/clusters': {
+      id: '/_authenticated/_app/clusters'
+      path: '/clusters'
+      fullPath: '/clusters'
+      preLoaderRoute: typeof AuthenticatedAppClustersRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/coverage': {
+      id: '/_authenticated/_app/coverage'
+      path: '/coverage'
+      fullPath: '/coverage'
+      preLoaderRoute: typeof AuthenticatedAppCoverageRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/credentials': {
+      id: '/_authenticated/_app/credentials'
+      path: '/credentials'
+      fullPath: '/credentials'
+      preLoaderRoute: typeof AuthenticatedAppCredentialsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/journeys': {
+      id: '/_authenticated/_app/journeys'
+      path: '/journeys'
+      fullPath: '/journeys'
+      preLoaderRoute: typeof AuthenticatedAppJourneysRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/_app/overview': {
       id: '/_authenticated/_app/overview'
       path: '/overview'
@@ -150,17 +297,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppOverviewRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/releases': {
+      id: '/_authenticated/_app/releases'
+      path: '/releases'
+      fullPath: '/releases'
+      preLoaderRoute: typeof AuthenticatedAppReleasesRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/runs': {
+      id: '/_authenticated/_app/runs'
+      path: '/runs'
+      fullPath: '/runs'
+      preLoaderRoute: typeof AuthenticatedAppRunsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/settings': {
+      id: '/_authenticated/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedAppSettingsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppArchetypesRoute: typeof AuthenticatedAppArchetypesRoute
+  AuthenticatedAppAuditRoute: typeof AuthenticatedAppAuditRoute
+  AuthenticatedAppClustersRoute: typeof AuthenticatedAppClustersRoute
+  AuthenticatedAppCoverageRoute: typeof AuthenticatedAppCoverageRoute
+  AuthenticatedAppCredentialsRoute: typeof AuthenticatedAppCredentialsRoute
+  AuthenticatedAppJourneysRoute: typeof AuthenticatedAppJourneysRoute
   AuthenticatedAppOverviewRoute: typeof AuthenticatedAppOverviewRoute
+  AuthenticatedAppReleasesRoute: typeof AuthenticatedAppReleasesRoute
+  AuthenticatedAppRunsRoute: typeof AuthenticatedAppRunsRoute
+  AuthenticatedAppSettingsRoute: typeof AuthenticatedAppSettingsRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppArchetypesRoute: AuthenticatedAppArchetypesRoute,
+  AuthenticatedAppAuditRoute: AuthenticatedAppAuditRoute,
+  AuthenticatedAppClustersRoute: AuthenticatedAppClustersRoute,
+  AuthenticatedAppCoverageRoute: AuthenticatedAppCoverageRoute,
+  AuthenticatedAppCredentialsRoute: AuthenticatedAppCredentialsRoute,
+  AuthenticatedAppJourneysRoute: AuthenticatedAppJourneysRoute,
   AuthenticatedAppOverviewRoute: AuthenticatedAppOverviewRoute,
+  AuthenticatedAppReleasesRoute: AuthenticatedAppReleasesRoute,
+  AuthenticatedAppRunsRoute: AuthenticatedAppRunsRoute,
+  AuthenticatedAppSettingsRoute: AuthenticatedAppSettingsRoute,
 }
 
 const AuthenticatedAppRouteWithChildren =
